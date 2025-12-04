@@ -3,6 +3,7 @@ const mongoose = require("mongoose")
 require("dotenv").config()
 const app = express()
 const cors = require("cors")
+const path = require("path");
 const cookieParser = require("cookie-parser")
 
 app.use(cors({
@@ -12,7 +13,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }))
 
-app.use(express.static("dist"))
+app.use(express.static(path.join(__dirname, "dist")));
 app.use(cookieParser())
 app.use(express.json())
 
@@ -31,6 +32,10 @@ app.use('/api/free-trial', require("./routes/freeTrialRoutes"));
 app.get("/api/health", (req, res) => {
     res.json({ message: "Server is running", status: "OK" })
 })
+// ⭐ IMPORTANT: Catch-all route for React SPA
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 mongoose.connect(process.env.MONGO_URL)
 mongoose.connection.once("open", () => {
     console.log("mongo conected")
