@@ -32,8 +32,7 @@ app.use('/api/free-trial', require("./routes/freeTrialRoutes"));
 app.get("/api/health", (req, res) => {
     res.json({ message: "Server is running", status: "OK" })
 })
-// ⭐ IMPORTANT: Catch-all route for React SPA
-app.get("*", (req, res) => {
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 mongoose.connect(process.env.MONGO_URL)
